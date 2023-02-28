@@ -62,14 +62,15 @@ class AppFixtures extends Fixture
             $category = new Category();
             $category
             ->setName($faker->word(1, true))
-            ->setColor($faker->word(1, true))
-            ->setCreatedAt((new \DateTimeImmutable()))
-            ->setUpdatedAt(($category->getCreatedAt()))
+            ->setColor($faker->hexColor)
+            ->setCreatedAt(new \DateTimeImmutable())
+            ->setUpdatedAt($category->getCreatedAt())
             ;
 
             $categories[] = $category;
+            $manager->persist($category);
         }
-        
+
         $manager->flush();
 
         for ($i=0; $i < 100 ; $i++) { 
