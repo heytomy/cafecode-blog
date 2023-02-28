@@ -1,17 +1,31 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Blog{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-        <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
-        <link rel="stylesheet" href="{{ asset('css/reset.css')}}">
-        <link rel="stylesheet" href="{{ asset('css/main.css')}}">
-    </head>
 
-    <body>
-        {% block body %}        
-        
-        {% endblock %}
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Blog{% endblock %}</title>
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+    <link rel="stylesheet" href="{{ asset('css/reset.css')}}">
+    <link rel="stylesheet" href="{{ asset('css/main.css')}}">
+</head>
+<header>
+    <div class="nav">
+        <a href="{{ path('app_blog')}}"><img src="{{ asset('img/blog-blank.png') }}" alt="main logo"></a>
+        <ul>
+            <li><a href="{{ path('app_blog')}}">Blog</a></li>
+            <li><a href="{{ path('app_login')}}">Login</a></li>
+            <li><a href="{{ path('app_register')}}">Register</a></li>
+
+        </ul>
+    </div>
+</header>
+
+<body>
+    {% block body %}
+
+    {% endblock %}
+</body>
+
 </html>
