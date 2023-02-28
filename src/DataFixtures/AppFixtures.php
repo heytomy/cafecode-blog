@@ -2,9 +2,10 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Article;
-use App\Entity\Category;
 use App\Entity\User;
+use App\Entity\Article;
+use App\Entity\Comment;
+use App\Entity\Category;
 use Faker\Factory as Faker;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -24,6 +25,23 @@ class AppFixtures extends Fixture
     {
         $faker = Faker::create();
 
+        // Create an author
+        $author = new User();
+        $author
+        ->setEmail('author@example.com')
+        ->setUsername('Author')
+        ->setRoles(['ROLE_AUTHOR'])
+        ->setIsActive(true)
+        ->setCreatedAt(new \DateTimeImmutable())
+        ->setUpdatedAt(new \DateTimeImmutable())
+        ;
+
+        $hashedPassword = $this->passwordHasher->hashPassword($author, 'author');
+        $author->setPassword($hashedPassword);
+
+        $manager->persist($author);
+
+        // Create an admin
         $user = new User();
         $user
             ->setEmail('admin@email.com')
@@ -94,6 +112,31 @@ class AppFixtures extends Fixture
             ;
 
             $manager->persist($article);
+        }
+
+        $manager->flush();
+
+         // Create 100 articles ROLE_AUTHOR
+         for ($i = 0; $i < 100; $i++) {
+            $article = new Article();
+            $article->setTitle($faker->sentence())
+                    ->setContent($faker->paragraphs(3, true))
+                    ->setAuthor($author)
+                    ->setCreatedAt($faker->dateTimeBetween('-1 year', 'now'))
+                    ->addCategory($faker->randomElement($categories));
+            $manager->persist($article);
+        }
+
+        // Get all users
+        $users = $manager->getRepository(User::class)->findByRole(['ROLE_ADMIN', 'ROLE_AUTHOR'], ['email' => 'ASC']);
+
+        // Create 300 comments with random users and articles
+        for ($i = 0; $i < 300; $i++) {
+            $comment = new Comment();
+            $comment->setContent($faker->paragraph())
+                    ->setArticle($faker->randomElement($articles))
+                    ->setUser($faker->randomElement($users));
+            $manager->persist($comment);
         }
 
         $manager->flush();
