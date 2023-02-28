@@ -2,100 +2,236 @@
 
 namespace App\Entity;
 
+use App\Repository\ArticleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\PreUpdate;
 
-/**
- * Article
- *
- * @ORM\Table(name="article", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_23A0E66989D9B62", columns={"slug"})}, indexes={@ORM\Index(name="IDX_23A0E66F675F31B", columns={"author_id"}), @ORM\Index(name="IDX_23A0E6612469DE2", columns={"category_id"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    const STATUS_DRAFT = 0;
+    const STATUS_PUBLISHED = 1;
+
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $content = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $slug = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column]
+    #[Assert\Choice(choices: [
+        self::STATUS_DRAFT,
+        self::STATUS_PUBLISHED
+    ])]
+    private ?int $status = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $featuredImage = null;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class)]
+    private Collection $comments;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $author = null;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Category $category = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $featuredText = null;
+
+    public function __construct()
+    {
+        $this->comments = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[PrePersist]
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[PreUpdate]
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): self
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    public function getContent(): ?string
+    {
+        return $this->content;
+    }
+
+    public function setContent(?string $content): self
+    {
+        $this->content = $content;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
+
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getFeaturedImage(): ?string
+    {
+        return $this->featuredImage;
+    }
+
+    public function setFeaturedImage(string $featuredImage): self
+    {
+        $this->featuredImage = $featuredImage;
+
+        return $this;
+    }
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="title", type="string", length=255, nullable=false)
+     * @return Collection<int, Comment>
      */
-    private $title;
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="content", type="text", length=0, nullable=true)
-     */
-    private $content;
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setArticle($this);
+        }
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="slug", type="string", length=255, nullable=false)
-     */
-    private $slug;
+        return $this;
+    }
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     */
-    private $createdAt;
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getArticle() === $this) {
+                $comment->setArticle(null);
+            }
+        }
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     */
-    private $updatedAt;
+        return $this;
+    }
 
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="status", type="integer", nullable=false)
-     */
-    private $status;
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="featured_image", type="string", length=255, nullable=false)
-     */
-    private $featuredImage;
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
 
-    /**
-     * @var string|null
-     *
-     * @ORM\Column(name="featured_text", type="text", length=0, nullable=true)
-     */
-    private $featuredText;
+        return $this;
+    }
 
-    /**
-     * @var \Category
-     *
-     * @ORM\ManyToOne(targetEntity="Category")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="category_id", referencedColumnName="id")
-     * })
-     */
-    private $category;
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
 
-    /**
-     * @var \User
-     *
-     * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumns({
-     *   @ORM\JoinColumn(name="author_id", referencedColumnName="id")
-     * })
-     */
-    private $author;
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
 
+        return $this;
+    }
 
+    public function getFeaturedText(): ?string
+    {
+        return $this->featuredText;
+    }
+
+    public function setFeaturedText(?string $featuredText): self
+    {
+        $this->featuredText = $featuredText;
+
+        return $this;
+    }
 }

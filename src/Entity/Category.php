@@ -2,52 +2,137 @@
 
 namespace App\Entity;
 
+use App\Repository\CategoryRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\PrePersist;
+use Doctrine\ORM\Mapping\PreUpdate;
 
-/**
- * Category
- *
- * @ORM\Table(name="category", uniqueConstraints={@ORM\UniqueConstraint(name="UNIQ_64C19C15E237E06", columns={"name"})})
- * @ORM\Entity
- */
+#[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
 {
-    /**
-     * @var int
-     *
-     * @ORM\Column(name="id", type="integer", nullable=false)
-     * @ORM\Id
-     * @ORM\GeneratedValue(strategy="IDENTITY")
-     */
-    private $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
+    #[ORM\Column(length: 255, unique: true)]
+    private ?string $name = null;
+
+    #[ORM\Column(length: 10)]
+    private ?string $color = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $updatedAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Article::class)]
+    private Collection $articles;
+
+    public function __construct()
+    {
+        $this->articles = new ArrayCollection();
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[PrePersist]
+    public function prePersist()
+    {
+        $this->createdAt = new \DateTime();
+        $this->updatedAt = new \DateTime();
+    }
+
+    #[PreUpdate]
+    public function preUpdate()
+    {
+        $this->updatedAt = new \DateTime();
+    }
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): self
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function getColor(): ?string
+    {
+        return $this->color;
+    }
+
+    public function setColor(string $color): self
+    {
+        $this->color = $color;
+
+        return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="name", type="string", length=255, nullable=false)
+     * @return Collection<int, Article>
      */
-    private $name;
+    public function getArticles(): Collection
+    {
+        return $this->articles;
+    }
 
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="color", type="string", length=10, nullable=false)
-     */
-    private $color;
+    public function addArticle(Article $article): self
+    {
+        if (!$this->articles->contains($article)) {
+            $this->articles->add($article);
+            $article->setCategory($this);
+        }
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="updated_at", type="datetime", nullable=false)
-     */
-    private $updatedAt;
+        return $this;
+    }
 
-    /**
-     * @var \DateTime
-     *
-     * @ORM\Column(name="created_at", type="datetime", nullable=false)
-     */
-    private $createdAt;
+    public function removeArticle(Article $article): self
+    {
+        if ($this->articles->removeElement($article)) {
+            // set the owning side to null (unless already changed)
+            if ($article->getCategory() === $this) {
+                $article->setCategory(null);
+            }
+        }
 
-
+        return $this;
+    }
 }
