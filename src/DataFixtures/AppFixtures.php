@@ -60,7 +60,17 @@ class AppFixtures extends Fixture
 
         for ($i=0; $i < 10; $i++) { 
             $category = new Category();
+            $category
+            ->setName($faker->word(1, true))
+            ->setColor($faker->word(1, true))
+            ->setCreatedAt((new \DateTimeImmutable()))
+            ->setUpdatedAt(($category->getCreatedAt()))
+            ;
+
+            $categories[] = $category;
         }
+        
+        $manager->flush();
 
         for ($i=0; $i < 100 ; $i++) { 
             $title = $faker->words(3, true);
@@ -79,7 +89,7 @@ class AppFixtures extends Fixture
             ->setStatus($faker->numberBetween(0, 1))
             ->setFeaturedImage($faker->imageUrl())
             ->setAuthor($userAleatoire)
-            ->setCategory()
+            ->setCategory($category)
             ;
 
             $manager->persist($article);
