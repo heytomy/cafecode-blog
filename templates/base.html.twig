@@ -17,9 +17,16 @@
         <a href="{{ path('app_blog')}}"><img src="{{ asset('img/blog-blank.png') }}" alt="main logo"></a>
         <nav>
             <ul>
+            	{% if is_granted('ROLE_ADMIN') %}
+                <li><a href="{{ path('admin')}}">Admin</a></li>
+				{% endif %}
                 <li><a href="{{ path('app_blog')}}">Blog</a></li>
+                {% if app.user %}
+                <li><a href="{{ path('app_logout')}}">Logout</a></li>
+                {% else %}
                 <li><a href="{{ path('app_login')}}">Login</a></li>
                 <li><a href="{{ path('app_register')}}">Register</a></li>
+                {% endif %}
             </ul>
         </nav>
     </div>

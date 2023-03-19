@@ -7,8 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -18,13 +16,13 @@ class Category
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     private ?string $name = null;
 
     #[ORM\Column(length: 10)]
     private ?string $color = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -37,20 +35,6 @@ class Category
     {
         $this->articles = new ArrayCollection();
         $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
-    }
-
-    #[PrePersist]
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
-    }
-
-    #[PreUpdate]
-    public function preUpdate()
-    {
-        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -87,7 +71,7 @@ class Category
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -97,6 +81,11 @@ class Category
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->createdAt = new \DateTime();
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
@@ -134,5 +123,8 @@ class Category
         }
 
         return $this;
+    }
+    public function __toString() {
+        return $this->name;
     }
 }

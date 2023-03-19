@@ -7,15 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\PrePersist;
-use Doctrine\ORM\Mapping\PreUpdate;
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 class Article
 {
-    const STATUS_DRAFT = 0;
-    const STATUS_PUBLISHED = 1;
-
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -24,60 +19,42 @@ class Article
     #[ORM\Column(length: 255)]
     private ?string $title = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
 
-    #[ORM\Column(length: 255, unique: true)]
+    #[ORM\Column(length: 255)]
     private ?string $slug = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $featuredText = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $createdAt = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
     #[ORM\Column]
-    #[Assert\Choice(choices: [
-        self::STATUS_DRAFT,
-        self::STATUS_PUBLISHED
-    ])]
     private ?int $status = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $featuredImage = null;
-
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class)]
-    private Collection $comments;
 
     #[ORM\ManyToOne(inversedBy: 'articles')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $author = null;
 
-    #[ORM\ManyToOne(inversedBy: 'articles')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Category $category = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $featuredText = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $featuredImage = null;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: Comment::class, cascade:["remove"])]
+    private Collection $comments;
+
+    #[ORM\ManyToOne(inversedBy: 'articles')]
+    private ?Category $category = null;
 
     public function __construct()
     {
         $this->comments = new ArrayCollection();
         $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
-    }
-
-    #[PrePersist]
-    public function prePersist()
-    {
-        $this->createdAt = new \DateTime();
-        $this->updatedAt = new \DateTime();
-    }
-
-    #[PreUpdate]
-    public function preUpdate()
-    {
-        $this->updatedAt = new \DateTime();
     }
 
     public function getId(): ?int
@@ -102,7 +79,7 @@ class Article
         return $this->content;
     }
 
-    public function setContent(?string $content): self
+    public function setContent(string $content): self
     {
         $this->content = $content;
 
@@ -121,9 +98,26 @@ class Article
         return $this;
     }
 
+    public function getFeaturedText(): ?string
+    {
+        return $this->featuredText;
+    }
+
+    public function setFeaturedText(?string $featuredText): self
+    {
+        $this->featuredText = $featuredText;
+
+        return $this;
+    }
+
     public function getCreatedAt(): ?\DateTimeInterface
     {
         return $this->createdAt;
+    }
+    #[ORM\PrePersist]
+    public function prePersist(): void
+    {
+        $this->createdAt = new \DateTime();
     }
 
     public function setCreatedAt(\DateTimeInterface $createdAt): self
@@ -138,7 +132,7 @@ class Article
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(?\DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
@@ -157,12 +151,25 @@ class Article
         return $this;
     }
 
+    public function getAuthor(): ?User
+    {
+        return $this->author;
+    }
+
+    public function setAuthor(?User $author): self
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+
     public function getFeaturedImage(): ?string
     {
         return $this->featuredImage;
     }
 
-    public function setFeaturedImage(string $featuredImage): self
+    public function setFeaturedImage(?string $featuredImage): self
     {
         $this->featuredImage = $featuredImage;
 
@@ -199,18 +206,6 @@ class Article
         return $this;
     }
 
-    public function getAuthor(): ?User
-    {
-        return $this->author;
-    }
-
-    public function setAuthor(?User $author): self
-    {
-        $this->author = $author;
-
-        return $this;
-    }
-
     public function getCategory(): ?Category
     {
         return $this->category;
@@ -219,18 +214,6 @@ class Article
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
-
-        return $this;
-    }
-
-    public function getFeaturedText(): ?string
-    {
-        return $this->featuredText;
-    }
-
-    public function setFeaturedText(?string $featuredText): self
-    {
-        $this->featuredText = $featuredText;
 
         return $this;
     }
