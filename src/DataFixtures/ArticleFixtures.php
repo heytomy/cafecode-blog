@@ -31,7 +31,8 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
                 ->setCategory($faker->randomElement($category))
                 ->setStatus($faker->numberBetween(1, 4))
                 ->setCreatedAt($faker->dateTimeThisMonth)
-                ->setUpdatedAt($faker->dateTimeThisMonth);
+                ->setUpdatedAt($faker->dateTimeThisMonth)
+                ->setFeaturedImage($faker->imageUrl(640, 200, 'article', true));
 
             $manager->persist($article);
         }

@@ -1,9 +1,15 @@
 <div class="container">
-{% for article in articles %}
-    <h2>{{ article.title }}</h2>
-    <p>{{ article.content }}</p>
-    <p>Author: {{ article.author.username }}</p>
-    <p>Category: {{ article.category.name }}</p>
-    <p>Created at: {{ article.createdAt|date('F j, Y') }}</p>
-{% endfor %}
+  {% for article in articles %}
+    <div class="card mb-3">
+      <img src="{{ article.FeaturedImage }}" class="card-img-top" alt="{{ article.title }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ article.title }}</h5>
+        <p class="card-text">{{ article.content }}</p>
+        <p class="card-text">Author: {{ article.author.username }}</p>
+        <p class="card-text">Category: {{ article.category.name }}</p>
+        <p class="card-text">Created at: {{ article.createdAt|date('F j, Y') }}</p>
+        <a href="#" class="btn btn-primary">Voir</a>
+      </div>
+    </div>
+  {% endfor %}
 </div>
