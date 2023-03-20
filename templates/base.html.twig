@@ -32,7 +32,11 @@
 						</li>
 					{% endif %}
 
-                    {% if route_name == "app_blog" %}
+                    {% if route_name == "app_blog" and app.user %}
+                    <li> 
+                        <a href="{{ path('app_blog')}}">Les derniers articles</a>
+                    </li>
+
                     <li> 
                         <a href="{{ path('app_blog')}}">Tous les articles</a>
                     </li>
