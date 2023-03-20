@@ -45,7 +45,7 @@ class UserFixtures extends Fixture
 
             $admin
                 ->setEmail($faker->email())
-                ->setUsername($faker->userName)
+                ->setUsername('Admin')
                 ->setRoles(['ROLE_ADMIN'])
                 ->setUpdatedAt($faker->dateTimeThisMonth)
                 ->setCreatedAt($faker->dateTimeThisMonth);
