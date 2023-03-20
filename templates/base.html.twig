@@ -1,47 +1,79 @@
+{% set route_name = app.request.attributes.get('_route') %}
 <!DOCTYPE html>
 <html>
 
-<head>
-    <meta charset="UTF-8">
-    <title>{% block title %}Blog{% endblock %}</title>
-    <link rel="icon"
-        href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
-    <link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Blog
+			{% endblock %}
+		</title>
+		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
+		<link rel="shortcut icon" href="{{ asset('img/favicon.ico') }}">
 
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
+		{% block stylesheets %}
+			{{ encore_entry_link_tags('app') }}
+		{% endblock %}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    
+		{% block javascripts %}
+			{{ encore_entry_script_tags('app') }}
+		{% endblock %}
 
-</head>
-<header>
-    <div class="mynavbar">
-        <a href="{{ path('app_blog')}}"><img src="{{ asset('img/blog-blank.png') }}" alt="main logo"></a>
-        <nav>
-            <ul>
-            	{% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('admin')}}">Admin</a></li>
-				{% endif %}
-                <li><a href="{{ path('app_blog')}}">Blog</a></li>
-                {% if app.user %}
-                <li><a href="{{ path('app_logout')}}">Logout</a></li>
-                {% else %}
-                <li><a href="{{ path('app_login')}}">Login</a></li>
-                <li><a href="{{ path('app_register')}}">Register</a></li>
-                {% endif %}
-            </ul>
-        </nav>
-    </div>
-</header>
 
-<body>
-    {% block body %}
+	</head>
+	<header>
+		<div class="mynavbar">
+			<a href="{{ path('app_blog')}}"><img src="{{ asset('img/blog-blank.png') }}" alt="main logo"></a>
+			<nav>
+				<ul>
+					{% if is_granted('ROLE_ADMIN') %}
+						<li>
+							<a href="{{ path('admin')}}">Admin</a>
+						</li>
+					{% endif %}
 
-    {% endblock %}
-</body>
+                    {% if route_name == "app_blog" %}
+                    <li> 
+                        <a href="{{ path('app_blog')}}">Tous les articles</a>
+                    </li>
+
+                    {% else %}
+
+					<li>
+						<a href="{{ path('app_blog')}}">Blog</a>
+					</li>
+
+					{% endif %}
+
+					{% if app.user %}
+                        <li>
+                            <a href="{{ path('app_blog') }}">Ajouter un article</a>
+                        </li>
+						<li>
+							<a href="{{ path('app_logout')}}">Logout</a>
+						</li>
+					{% else %}
+						<li>
+							<a href="{{ path('app_login')}}">Login</a>
+						</li>
+						<li>
+							<a href="{{ path('app_register')}}">Register</a>
+						</li>
+					{% endif %}
+				</ul>
+
+				<form class="d-flex" role="search">
+					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+					<button class="btn btn-outline-success" type="submit">Search</button>
+				</form>
+
+			</nav>
+		</div>
+	</header>
+
+	<body>
+		{% block body %}{% endblock %}
+	</body>
 
 </html>
+
