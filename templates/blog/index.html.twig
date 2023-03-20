@@ -1,10 +1,35 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Home - Café & Code{% endblock %}
+{% block title %}Home - Café & Code
+{% endblock %}
 
 {% block body %}
-    <div class="container pt-5">
-        <h2>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis nostrum odit quo blanditiis omnis officiis hic veniam quis debitis cupiditate. Fugiat nihil eos saepe porro quam obcaecati, blanditiis incidunt vel?</p>
-    </div>
+	<div class="container pt-5">
+		<h2 class="text-center pb-4">Bienvenu sur Café & Code !</h2>
+		<h3>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis nostrum odit quo blanditiis omnis officiis hic veniam quis debitis cupiditate. Fugiat nihil eos saepe porro quam obcaecati, blanditiis incidunt vel?</p>
+
+	</div>
     
+	{# TODO: Lister les 10 derniers articles publiés par ordre du plus récents au plus anciens et ce de manière paginé #}
+
+	<nav aria-label="...">
+		<ul class="pagination justify-content-center">
+			<li class="page-item disabled">
+				<span class="page-link">Previous</span>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="#">1</a>
+			</li>
+			<li class="page-item active" aria-current="page">
+				<span class="page-link">2</span>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="#">3</a>
+			</li>
+			<li class="page-item">
+				<a class="page-link" href="#">Next</a>
+			</li>
+		</ul>
+	</nav>
+
 {% endblock %}

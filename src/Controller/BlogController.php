@@ -11,10 +11,12 @@ class BlogController extends AbstractController
 {
     #[Route('/', name: 'app_blog')]
 
-    public function index(): Response
+    public function index(ArticleRepository $articleRepository): Response
     {
+        $article = $articleRepository->findAll();
+        
         return $this->render('blog/index.html.twig', [
-            'blog' => 'blog',
+            'article' => $article,
         ]);
     }
 }
