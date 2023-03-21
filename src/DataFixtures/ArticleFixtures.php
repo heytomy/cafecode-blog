@@ -8,6 +8,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
+use Cocur\Slugify\Slugify;
 
 class ArticleFixtures extends Fixture implements DependentFixtureInterface
 {
@@ -23,11 +24,13 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
         for ($i = 0; $i < 100; $i++) {
             $article = new Article();
 
+            $slugify = new Slugify(["regexp" => "/([^A-Za-z0-9]|-)+/"]);
+
             $article
-                ->setTitle($faker->sentence)
-                ->setContent($faker->text)
+                ->setTitle($faker->sentence())
+                ->setContent($faker->paragraph(10))
                 ->setAuthor($this->getReference(UserFixtures::AUTHOR_USER_REFERENCE))
-                ->setSlug($faker->slug())
+                ->setSlug($slugify->slugify($article->getTitle()))
                 ->setCategory($faker->randomElement($category))
                 ->setStatus($faker->numberBetween(1, 4))
                 ->setCreatedAt($faker->dateTimeThisMonth)

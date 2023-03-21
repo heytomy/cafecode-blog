@@ -3,7 +3,7 @@
         <div class="col-md">
             {% if article.featuredImage %}
                 <a href="{{ path('article_show', { 'slug': article.slug }) }}">
-                    <img src="{{ article.featuredImage }}" alt="{{ article.featuredImage }}" loading="lazy" width="650" height="auto" >
+                    <img class="img-fluid mx-auto d-block mb-3" src="{{ article.featuredImage }}" alt="{{ article.slug }}" loading="lazy" width="600" heigh="auto">
                 </a>
             {% endif %}
         </div>
