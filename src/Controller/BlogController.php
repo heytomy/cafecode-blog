@@ -13,7 +13,7 @@ class BlogController extends AbstractController
 
     public function index(ArticleRepository $articleRepository): Response
     {
-        $article = $articleRepository->findAll();
+        $article = $articleRepository->findBy([], ['createdAt' => 'DESC'], 10);
         
         return $this->render('blog/index.html.twig', [
             'article' => $article,
