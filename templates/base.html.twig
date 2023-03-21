@@ -30,6 +30,9 @@
 						<li>
 							<a href="{{ path('admin')}}">Admin</a>
 						</li>
+						<li>
+                            <a href="{{ path('app_blog') }}">Ajouter un article</a>
+                        </li>
 					{% endif %}
 
                     {% if route_name == "app_blog" and app.user %}
@@ -50,9 +53,6 @@
 					{% endif %}
 
 					{% if app.user %}
-                        <li>
-                            <a href="{{ path('app_blog') }}">Ajouter un article</a>
-                        </li>
 						<li>
 							<a href="{{ path('app_logout')}}">Logout</a>
 						</li>
@@ -65,8 +65,8 @@
 						</li>
 					{% endif %}
 				</ul>
-				<form class="d-flex" role="search">
-					<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+				<form class="d-flex w-50 p-3 mx-auto" role="search">
+					<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
 					<button class="btn btn-outline-success" type="submit">Search</button>
 				</form>
 			</nav>

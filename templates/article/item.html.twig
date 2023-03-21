@@ -1,0 +1,23 @@
+<article class="mb-5">
+    <div class="row">
+        <div class="col-md">
+            {% if article.featuredImage %}
+                <a href="{{ path('article_show', { 'slug': article.slug }) }}">
+                    <img src="{{ article.featuredImage }}" alt="{{ article.featuredImage }}" loading="lazy" width="650" height="auto" >
+                </a>
+            {% endif %}
+        </div>
+        <div class="col-md">
+            <h2 class="article-title">
+                <a href="{{ path('article_show', { 'slug': article.slug }) }}" class="text-decoration-none">{{ article.title }}</a>
+            </h2>
+            <p>
+                {{ article.createdAt|date('d M Y') }} / <b>{{ article.category|raw }}</b>
+                {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+                    / <a class="text-decoration-none" href="{{ path('article_show', { 'slug': article.slug }) }}#comments">Laisser un commentaire</a>
+                {% endif %}
+            </p>
+            {{ article.featuredText ?: article.content|striptags|slice(0, 130) ~ '...' }}
+        </div>
+    </div>
+</article>

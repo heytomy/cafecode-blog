@@ -27,7 +27,7 @@ class ArticleFixtures extends Fixture implements DependentFixtureInterface
                 ->setTitle($faker->sentence)
                 ->setContent($faker->text)
                 ->setAuthor($this->getReference(UserFixtures::AUTHOR_USER_REFERENCE))
-                ->setSlug($faker->sentence)
+                ->setSlug($faker->slug())
                 ->setCategory($faker->randomElement($category))
                 ->setStatus($faker->numberBetween(1, 4))
                 ->setCreatedAt($faker->dateTimeThisMonth)
