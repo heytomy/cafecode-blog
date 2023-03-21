@@ -9,8 +9,36 @@
 		<h3>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Perferendis nostrum odit quo blanditiis omnis officiis hic veniam quis debitis cupiditate. Fugiat nihil eos saepe porro quam obcaecati, blanditiis incidunt vel?</p>
 
 	</div>
-    
-	{# TODO: Lister les 10 derniers articles publiés par ordre du plus récents au plus anciens et ce de manière paginé #}
+
+<main class="container pt-5">
+	<div class="row">
+
+		<div class="col-md-8">
+			<h3 class="pb-4 mb-4 fst-italic border-bottom">Les 10 derniers articles</h3>
+		</div>
+
+		<div class="col-md-4">
+			<div class="position-sticky">
+				<div class="p-4 mb-3 rounded">
+					<h4 class="fst-italic">Catégories</h4>
+					<ol class="list-unstyled mb-0">
+						<li>
+							{# {% for article in articles %} #}
+								{# <a class="text-decoration-none" href="#">{{ article.category.name }}</a> #}
+							{# {% endfor %} #}
+
+						</li>
+					</ol>
+				</div>
+			</div>
+		</div>
+
+	</div>
+</main>
+
+
+{# TODO: Lister les 10 derniers articles publiés par ordre du plus récents au plus anciens et ce de manière paginé #}
+
 
 	<nav aria-label="...">
 		<ul class="pagination justify-content-center">
