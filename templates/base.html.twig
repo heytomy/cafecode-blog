@@ -23,7 +23,7 @@
 	</head>
 	<header>
 		<div class="mynavbar">
-			<a href="{{ path('app_blog')}}"><img src="{{ asset('img/blog-blank.png') }}" alt="main logo"></a>
+			<a href="{{ path('app_blog')}}"><img src="{{ asset('img/blog-blank.png') }}" alt="main logo" class="logo"></a>
 			<nav>
 				<ul>
 					{% if is_granted('ROLE_ADMIN') %}
@@ -65,10 +65,12 @@
 						</li>
 					{% endif %}
 				</ul>
-				<form class="d-flex w-50 p-3 mx-auto" role="search">
-					<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-					<button class="btn btn-outline-success" type="submit">Search</button>
-				</form>
+				<div class="container">
+					<form class="d-flex p-3" role="search">
+						<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+						<button class="btn btn-outline-success" type="submit">Search</button>
+					</form>
+				</div>
 			</nav>
 		</div>
 	</header>

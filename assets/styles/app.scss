@@ -1,41 +1,87 @@
 *{
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 header {
-    background-color: #eeeeee;
-    color: #fff;
-    padding: 1em;
-  }
+  background-color: #eeeeee;
+  color: #fff;
+  padding: 1em;
+}
 
-  nav img {
-    display: flex;
-    text-align: center;
-    margin: auto;
-    padding-top: 1em;
-  }
+nav img {
+  display: flex;
+  text-align: center;
+  margin: auto;
+  padding-top: 1em;
+  max-width: 100%;
+}
+
+.mynavbar {
+  text-align: center;
+  padding: 1em;
+}
+
+.mynavbar ul {
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap; /* Added responsive style */
+  padding-bottom: 1em;
+}
+
+.mynavbar li {
+  padding-top: 1em;
+  margin: 0 1em;
+}
+
+.mynavbar a {
+  color: #333;
+  transition: color 0.2s ease-in-out;
+  text-decoration: none;
+  font-size: 1.1rem; /* Added responsive style */
+  padding: 0.5em 1em; /* Added responsive style */
+}
+
+/* Responsive styles for smaller screens */
+@media only screen and (max-width: 768px) {
+
+.mynavbar li {
+  margin: 0.5em 0;
+}
+
+.mynavbar a {
+  padding: 0.5em;
+}
+
+.mynavbar ul {
+  flex-direction: column;
+}
+
+.mynavbar form {
+  margin-top: 1em;
+}
+}
+
+/* Responsive styles for even smaller screens */
+@media only screen and (max-width: 480px) {
+
+.logo {
+    max-width: 100%;
+    height: auto;
+}
   
-  .mynavbar {
-    text-align: center;
-    padding: 1em;
-  }
-  
-  .mynavbar ul {
-    justify-content: center;
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    padding-bottom: 1em;
-  }
-  
-  .mynavbar li {
-    padding-top: 1em;
-    margin: 0 1em;
-  }
-  
-  .mynavbar a {
-    color: #333;
-    transition: color 0.2s ease-in-out;
-    text-decoration: none;
-  }
+.mynavbar {
+  padding: 0.5em;
+}
+
+.mynavbar li {
+  margin: 0.25em 0;
+}
+
+.mynavbar a {
+  padding: 0.25em;
+  font-size: 1rem;
+}
+}
