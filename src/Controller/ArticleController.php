@@ -6,6 +6,7 @@ use App\Entity\Article;
 use App\Form\ArticleType;
 use App\Repository\ArticleRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,9 +17,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ArticleController extends AbstractController
 {
     #[Route('/articles', name: 'article_index')]
-    public function index(ArticleRepository $articleRepository): Response
+    public function index(ArticleRepository $articleRepository, Request $request, PaginatorInterface $paginator): Response
     {
         $article = $articleRepository->findBy([], ['createdAt' => 'DESC']);
+
+        $article = $paginator->paginate(
+            $article,
+            $request->query->getInt('page', 1),
+            10 // items per page
+        );
 
         return $this->render('article/index.html.twig', [
             'article' => $article,

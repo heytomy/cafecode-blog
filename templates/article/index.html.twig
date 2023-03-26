@@ -2,6 +2,8 @@
 
 {% block body %}
 <div class="container mt-5">
-    {% include 'article/list.html.twig' %}
+    <h1 class="mb-4">Tous les articles: ({{ article.getTotalItemCount }})</h1>
+    {% include 'article/list.html.twig'%}
 </div>
+
 {% endblock %}

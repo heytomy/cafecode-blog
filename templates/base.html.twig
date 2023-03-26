@@ -35,7 +35,6 @@
                         </li>
 					{% endif %}
 
-                    {% if route_name == "app_blog" and app.user %}
                     <li> 
                         <a href="{{ path('app_blog')}}">Les derniers articles</a>
                     </li>
@@ -43,14 +42,6 @@
                     <li> 
                         <a href="{{ path('article_index')}}">Tous les articles</a>
                     </li>
-
-                    {% else %}
-
-					<li>
-						<a href="{{ path('app_blog')}}">Blog</a>
-					</li>
-
-					{% endif %}
 
 					{% if app.user %}
 						<li>
