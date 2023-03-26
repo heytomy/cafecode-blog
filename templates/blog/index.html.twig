@@ -26,10 +26,11 @@
 					<h4 class="pb-2 mb-4 fst-italic border-bottom">Catégories</h4>
 					<ol class="list-unstyled mb-0">
 						<li>
-							{# {% for article in articles %} #}
-								{# <a class="text-decoration-none" href="#">{{ article.category.name }}</a> #}
-							{# {% endfor %} #}
-
+							{% for article in article %}
+							<div class="col">
+								<a class="text-decoration-none" href="#">{{ article.category.name }}</a>
+							{% endfor %}
+							</div>
 						</li>
 					</ol>
 				</div>
