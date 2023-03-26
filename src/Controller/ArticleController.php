@@ -18,7 +18,7 @@ class ArticleController extends AbstractController
     #[Route('/articles', name: 'article_index')]
     public function index(ArticleRepository $articleRepository): Response
     {
-        $article = $articleRepository->findAll();
+        $article = $articleRepository->findBy([], ['createdAt' => 'DESC']);
 
         return $this->render('article/index.html.twig', [
             'article' => $article,
